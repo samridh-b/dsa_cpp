@@ -3,7 +3,8 @@
 template<typename> class list;
 template<typename T, bool isConst> class ListIterator;
 
-template<typename T> class Node{
+template<typename T> 
+class Node {
   friend class list<T>;
   friend class ListIterator<T, true>;
   friend class ListIterator<T, false>;
@@ -16,7 +17,8 @@ template<typename T> class Node{
     Node *prev;
 };
 
-template<typename T> class list{
+template<typename T> 
+class list {
   public:
     using iterator = ListIterator<T, false>;
     using const_iterator = ListIterator<T, true>;
@@ -47,20 +49,14 @@ template<typename T> class list{
     Node<T> *sentinel;
 };
 
-template<typename T, bool b1, bool b2>
-bool operator==(const ListIterator<T, b1>&, const ListIterator<T, b2>&);
-
-template<typename T, bool b1, bool b2>
-bool operator!=(const ListIterator<T, b1>&, const ListIterator<T, b2>&);
-
-template <typename T, bool isConst> class ListIterator {
+template <typename T, bool isConst> 
+class ListIterator {
   template<typename U, bool b1, bool b2> friend
     bool operator==(const ListIterator<U, b1>&, const ListIterator<U, b2>&);
 
   template<typename U, bool b1, bool b2> friend
     bool operator!=(const ListIterator<U, b1>&, const ListIterator<U, b2>&);
 
-  friend class ListIterator<T, true>;
   friend class ListIterator<T, false>;
 
   using ref_t = std::conditional_t<isConst, const T&, T&>;
@@ -92,26 +88,26 @@ auto ListIterator<T, isConst>::operator->() const -> ptr_t{
 }
 
 template<typename T, bool isConst> 
-ListIterator<T, isConst>& ListIterator<T, isConst>::operator++(){
+auto ListIterator<T, isConst>::operator++() -> ListIterator& {
   ptr = ptr->next;
   return *this;
 }
 
 template<typename T, bool isConst>
-ListIterator<T, isConst>& ListIterator<T, isConst>::operator--(){
+auto ListIterator<T, isConst>::operator--() -> ListIterator& {
   ptr = ptr->prev;
   return *this;
 }
 
 template<typename T, bool isConst>
-ListIterator<T, isConst> ListIterator<T, isConst>::operator++(int){
+auto ListIterator<T, isConst>::operator++(int) -> ListIterator {
   ListIterator ret = *this;
   ++*this;
   return ret;
 }
 
 template<typename T, bool isConst>
-ListIterator<T, isConst> ListIterator<T, isConst>::operator--(int){
+auto ListIterator<T, isConst>::operator--(int) -> ListIterator {
   ListIterator ret = *this;
   --*this;
   return ret;
@@ -119,7 +115,7 @@ ListIterator<T, isConst> ListIterator<T, isConst>::operator--(int){
 
 
 template<typename T>
-typename list<T>::iterator list<T>::insert(const Node<T> *pos, const T& t){
+auto list<T>::insert(const Node<T> *pos, const T& t) -> iterator {
   Node<T> *prev = pos->prev;
   Node<T> *next = prev->next;
   Node<T> *new_node = new Node<T>(t);
@@ -149,34 +145,33 @@ bool list<T>::empty() {
 }
 
 template<typename T>
-typename list<T>::iterator list<T>::begin() {
+auto list<T>::begin() -> iterator{
   return sentinel->next;
 }
 
 template<typename T>
-typename list<T>::iterator list<T>::end() {
+auto list<T>::end() -> iterator{
   return sentinel->prev;
 }
 
 template<typename T>
-typename list<T>::const_iterator list<T>::begin() const {
+auto list<T>::begin() const -> const_iterator{
   return sentinel->next;
 }
 
 
 template<typename T>
-typename list<T>::const_iterator list<T>::end() const{
+auto list<T>::end() const -> const_iterator{
   return sentinel->prev;
 }
 template<typename T>
-typename list<T>::const_iterator list<T>::cbegin() const{
+auto list<T>::cbegin() const -> const_iterator{
   return sentinel->next;
 }
 template<typename T>
-typename list<T>::const_iterator list<T>::cend() const{
+auto list<T>::cend() const -> const_iterator{
   return sentinel->prev;
 }
-
 
 template<typename T>
 T& list<T>::front() {
